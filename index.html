@@ -4,11 +4,11 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Forex : Foreign Exchange Rates from OpenExchangeRates.org" />
+    <meta name="description" content="Forex : Foreign Exchange Rates from OpenExchangeRates.org Perl Module" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Forex</title>
+    <title>Forex.pm</title>
   </head>
 
   <body>
@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/github4bhavin/Forex">View on GitHub</a>
 
           <h1 id="project_title">Forex</h1>
-          <h2 id="project_tagline">Foreign Exchange Rates from OpenExchangeRates.org</h2>
+          <h2 id="project_tagline">Foreign Exchange Rates from OpenExchangeRates.org for Perl</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/github4bhavin/Forex/zipball/master">Download this project as a .zip file</a>
@@ -31,25 +31,118 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to Forex.pm</h3>
+        <h3>Forex.pm</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Perl Module that give you Daily and Historic Foreign Exchange Rates for all currencies from OpenExchangeRates.org. You would need and account with then but its free for basic usage.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<pre><code>
+    use Forex::OXR;
+    
+    my $oxr = new Forex::OXR( 'APP_ID' => $app_id, 'BASE' => 'USD');
+    
+    #__fetch and initialize daily rates
+    #__from $from_date to $to_date in yyyy-mm-dd
+    $oxr->get_rates_from ( $from_date, $to_date );
+    
+    #___ fetches rates for $date (yyyy-mm-dd)
+    $oxr->get_rates( $date );
+    
+    #___ fetches reates for today
+    $oxr->get_rates();
+    
+    #___ gives AUD on 2012-09-01 in USD Base currency
+    $usd = $oxr->get_rate_of ( 'AUD', '2012-09-01' );
+    
+    #___Check what went wrong
+    if ($Forex::OXR::LASTERROR )
+    { print "\n Something went wrong" , $oxr->last_error_message(); }
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h3>Methods</h3>
 
-<h3>Designer Templates</h3>
+<p> <h6>Constructor</h6>
+          <p>
+          <pre><code>my $oxe = new Forex::OXR( OXR_HOME => 'https://openexchangerates.org',
+              API_HOOK => 'api',
+              APP_ID   => 'temp-e091fc14b3884a516d6cc2c299a',
+              BASE     => 'AUD');</code></pre>
+          <p>API_HOOK is the path used by OpenExchangeRates, if you have a paid service you might have a different path provided by OpenExchangeRates along with your private APP_ID.</p>
+          </p>
+</p>
+<p> <h6>get_rate_of</h6>
+          <p>
+          <pre><code>$rate = $oxe->get_rate_of('AUD','2012-09-10');</code></pre>
+          <p>returns rate of $currency on $date with BASE default to 'USD'.This method actually looks up the cached rates from array <code>$obj->{CURRENCIES}</code>, which is filled by calling get_rates or <code>get_rates_from()</code> methods.'</p>
+          </p>
+</p>
+<p> <h6>get_rates_from</h6>
+          <p>
+          <pre><code>$oxe->get_rates_from('2012-07-10','2012-09-10');</code></pre>
+          <p>Downloads and fills array <code>$obj->{CURRENCIES}</code>, from $from_date to $to_date . Dates are expected in <code>yyyy-mm-dd</code> format.</p>
+          </p>
+</p>
+<p> <h6>get_rates</h6>
+          <p>
+          <pre><code>$oxe->get_rates('2012-07-10');</code></pre>
+          <p>Downloads and fills array <code>$obj->{CURRENCIES}</code> for $day specified. Dates are expected in <code>yyyy-mm-dd</code> format.</p>
+          </p>
+</p>
+<p> <h6>get_currency_symbols</h6>
+          <p>
+          <pre><code>$oxe->get_currency_symbols();</code></pre>
+          <p>Downloads and initializes all currency symbols from OpenExchangeRates.org. Method is useful to findout supported currencies.</p>
+          </p>
+</p>
+<p> <h6>base_currency</h6>
+          <p>
+          <pre><code>$oxe->base_currency('AUD');
+$base_currency = $oxe->base_currency();</code></pre>
+          <p>sets or return current value of BASE_CURRENCY.</p>
+          </p>
+</p>
+<p> <h6>oxr_home</h6>
+          <p>
+          <pre><code>$oxe->oxr_home('https://OpenExchangeRates.org');
+$oxr_home = $oxe->oxr_home();</code></pre>
+          <p>sets or return current value of OpenExchangeRates's Home.You could youse this value to change the default http to https connection if you are a paying coustomer to OpenExchangeRates.org</p>
+          </p>
+</p>
+   
+<p> <h6>app_id</h6>
+          <p>
+          <pre><code>$oxe->app_id('e091fc14b3884a516d6cc2c299a');
+$app_id = $oxe->app_id();</code></pre>
+          <p>sets or return current value of APP_ID.</p>
+          </p>
+</p>
+<p> <h6>get_currencies</h6>
+          <p>
+          <pre><code>$oxe->get_currencies();</code></pre>
+          <p>returns all currencies from currency's hash.</p>
+          </p>
+</p>
+<p> <h6>last_error</h6>
+          <p>
+          <pre><code>$oxe->last_error();</code></pre>
+          <p>returns last error object as returned by OpenExchangeRates.</p>
+          </p>
+</p>
+<p> <h6>last_error_message</h6>
+          <p>
+          <pre><code>$oxe->last_error_message();</code></pre>
+          <p>returns last error message generated by Forex.pm module.</p>
+          </p>
+</p>
+          
+<h3>External Links</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p> <a href="http://search.cpan.org/~bpatel/Forex-1.0/Forex.pm">Forex.pm on CPAN<a></p>
+<p> <a href="http://openexchangerates.org">OpenExchangeRates</a></p>
 
-<h3>Rather Drive Stick?</h3>
+<h3> License </h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
+<p> The Artistic License 2.0 (GPL Compatible) </p>
+    
 <h3>Authors and Contributors</h3>
 
 <p>Bhavin Patel (<a href='https://github.com/github4bhavin' class='user-mention'>github4bhavin</a>)</p>
