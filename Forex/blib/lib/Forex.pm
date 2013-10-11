@@ -6,7 +6,7 @@ use LWP::UserAgent;
 
 our $LASTERROR = undef;
 
-$VERSION  = '1.2';
+$FOREX::VERSION  = '1.3';
 
 =pod
 
