@@ -6,7 +6,7 @@ use LWP::UserAgent;
 
 our $LASTERROR = undef;
 
-$VERSION  = '1.2';
+$FOREX::VERSION  = '1.3';
 
 =pod
 
@@ -16,31 +16,30 @@ Forex - Historic Foreign Exchange Rates from Open Exchange Rates
 
 =head1 VERSION
 
-1.2
+1.3
 
 =head1 SYNOPSIS
 
  use Forex;
  
- my $oxr = new Forex( 'APP_ID' => $app_id, 'BASE' => 'USD');
+ my $forex = new Forex( 'APP_ID' => $app_id, 'BASE' => 'USD');
  
  #__fetch and initialize daily rates from $from_date to $to_date in yyyy-mm-dd 
- $oxr->get_rates_from ( $from_date, $to_date );
+ $forex->get_rates_from ( $from_date, $to_date );
 
  #___ fetches rates for $date (yyyy-mm-dd)
- $oxr->get_rates( $date );
+ $forex->get_rates( $date );
 	 
  #___ fetches reates for today 
- $oxr->get_rates();
+ $forex->get_rates();
 	
  #___ gives AUD on 2012-09-01 in USD Base currency
- $usd = $oxr->get_rate_of ( 'AUD', '2012-09-01' );  
+ $usd = $forex->get_rate_of ( 'AUD', '2012-09-01' );  
  
- if ($Forex::OXR::LASTERROR )
+ if ($Forex::LASTERROR )
     { print "\n Something went wrong" , $oxr->last_error_message(); }  
 
 =head1 DESCRIPTION
-
 
 =head1 METHODS
 
@@ -49,15 +48,23 @@ Forex - Historic Foreign Exchange Rates from Open Exchange Rates
 =head3 new Forex()
 
 returns new Forex object with defaults values for 
-OXR_HOME = 'http://openexchangerates.org',
-API_HOOK = 'api',
-APP_ID = 'temp-e091fc14b3884a516d6cc2c299a',
-BASE = 'USD'
 
- my $oxe = new Forex::OXR( OXR_HOME => 'https://openexchangerates.org',
- 									API_HOOK => 'api',
- 									APP_ID   => 'temp-e091fc14b3884a516d6cc2c299a',
- 									BASE     => 'AUD');
+=over 2
+
+=item OXR_HOME = 'http://openexchangerates.org',
+
+=item API_HOOK = 'api',
+
+=item APP_ID   = 'temp-e091fc14b3884a516d6cc2c299a',
+
+=item BASE     = 'USD'
+
+=back
+
+ my $oxe = new Forex( OXR_HOME => 'https://openexchangerates.org',
+                      API_HOOK => 'api',
+                      APP_ID   => 'temp-e091fc14b3884a516d6cc2c299a',
+                      BASE     => 'AUD');
 
 =cut
 
@@ -65,10 +72,10 @@ sub new {
 	my $class = shift;
 	my $self = {@_};
 	bless $self, $class;
-	$self->{ 'OXR_HOME' } = 'http://openexchangerates.org';
-	$self->{ 'API_HOOK' } = 'api';
-	$self->{ 'APP_ID'   } = 'temp-e091fc14b3884a516d6cc2c299a' if !$self->{APP_ID};
-	$self->{ 'BASE'     } = 'USD';
+	$self->{ 'OXR_HOME' } = 'http://openexchangerates.org'     unless defined ($self->{'OXR_HOME'});
+	$self->{ 'API_HOOK' } = 'api'                              unless defined ($self->{'API_HOOK'});
+	$self->{ 'APP_ID'   } = 'temp-e091fc14b3884a516d6cc2c299a' unless defined ($self->{APP_ID});
+	$self->{ 'BASE'     } = 'USD'                              unless defined ($self->{'BASE'});
 	return $self;
 }
 
@@ -76,7 +83,7 @@ sub new {
 
 =head3 get_rate_of( $currency, <$date> )
 
-This method returns forex rate for $currency on $date in USD, $date should be in C<yyyy-mm-dd> format.
+This method returns forex rate for C<$currency> on $date in USD, $date should be in C<yyyy-mm-dd> format.
 This method looks for currency rates in $obj->{ CURRENCIES } array.Which is filled by C<get_rates> or C<get_rates_from()> methods
 
 
