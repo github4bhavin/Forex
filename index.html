@@ -36,25 +36,25 @@
 <p>Perl Module that give you Daily and Historic Foreign Exchange Rates for all currencies from OpenExchangeRates.org. You would need and account with them but its free for basic usage.</p>
 
 <pre><code>
-    use Forex::OXR;
+    use Forex;
     
-    my $oxr = new Forex::OXR( 'APP_ID' => $app_id, 'BASE' => 'USD');
+    my $forex = new Forex( 'APP_ID' => $app_id, 'BASE' => 'USD');
     
     #__fetch and initialize daily rates
     #__from $from_date to $to_date in yyyy-mm-dd
-    $oxr->get_rates_from ( $from_date, $to_date );
+    $forex->get_rates_from ( $from_date, $to_date );
     
     #___ fetches rates for $date (yyyy-mm-dd)
-    $oxr->get_rates( $date );
+    $forex->get_rates( $date );
     
     #___ fetches reates for today
-    $oxr->get_rates();
+    $forex->get_rates();
     
     #___ gives AUD on 2012-09-01 in USD Base currency
     $usd = $oxr->get_rate_of ( 'AUD', '2012-09-01' );
     
     #___Check what went wrong
-    if ($Forex::OXR::LASTERROR )
+    if ($Forex::LASTERROR )
     { print "\n Something went wrong" , $oxr->last_error_message(); }
 </code></pre>
 
